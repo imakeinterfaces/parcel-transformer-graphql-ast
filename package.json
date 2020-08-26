@@ -1,0 +1,50 @@
+{
+  "name": "parcel-plugin-graphql-tag",
+  "version": "0.0.1",
+  "description": "graphql-tag ast import plugin",
+  "main": "src/index.js",
+  "author": "elliottkember",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elliottkember/parcel-plugin-graphql-ast.git"
+  },
+  "scripts": {
+    "lint": "eslint \"**/*.js\""
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "eslintConfig": {
+    "extends": [
+      "standard"
+    ],
+    "env": {
+      "node": true
+    }
+  },
+  "engines": {
+    "node": "^13.14.0",
+    "npm": "^6.13.7"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^12.0.0-alpha.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "parcel-bundler": ">= 1.12.3 < 2",
+    "pre-commit": "^1.2.2",
+    "standard": "^11.0.1"
+  },
+  "peerDependencies": {
+    "parcel-bundler": ">2"
+  },
+  "dependencies": {
+    "cosmiconfig": "^5.0.2",
+    "graphql-tag": "^2.11.0",
+    "loglevel": "^1.6.1"
+  }
+}
