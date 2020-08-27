@@ -17,9 +17,7 @@ module.exports = async function init(bundler) {
     log.trace(e);
   }
 
-  const extensions = (config && (config.extensions || config.extentions)) || [
-    "txt",
-  ];
+  const extensions = (config && config.extension) || ["graphql"];
 
   for (const ext of extensions) {
     bundler.addAssetType(ext, require.resolve("./transformer"));
