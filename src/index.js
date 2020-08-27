@@ -1,38 +1,50 @@
-// "use strict";
+const { Transformer } = require("@parcel/plugin");
+const gql = require("graphql-tag");
 
-// const packageName = require("../package.json").name;
-// const cosmiconfig = require("cosmiconfig");
-// const log = require("loglevel");
+const IMPORT_RE = /^# *import +['"](.*)['"] *;? *$/;
+const NEWLINE = /\r\n|[\n\r\u2028\u2029]/;
 
-// log.setLevel(process.env.LOG_LEVEL || "info");
+module.exports = new Transformer({
+  async transform({ asset, options, resolve }) {
+    let gqlMap = new Map();
 
-// module.exports = async function init(bundler) {
-//   const explorer = cosmiconfig(packageName);
-//   let config;
+    const traverseImports = (name, assetCode) => {
+      gqlMap.set(name, assetCode);
 
-//   try {
-//     const result = await explorer.search();
-//     config = result.config;
-//   } catch (e) {
-//     log.trace(e);
-//   }
+      return Promise.all(
+        assetCode
+          .split(NEWLINE)
+          .map((line) => line.match(IMPORT_RE))
+          .filter((match) => !!match)
+          // $FlowFixMe
+          .map(async ([, importName]) => {
+            let resolved = await resolve(name, importName);
 
-//   const extensions = (config && config.extension) || ["graphql"];
+            if (gqlMap.has(resolved)) {
+              return;
+            }
 
-//   for (const ext of extensions) {
-//     bundler.addAssetType(ext, require.resolve("./transformer"));
-//   }
-// };
+            let code = await options.inputFS.readFile(resolved, "utf8");
+            asset.addIncludedFile({
+              filePath: resolved,
+            });
 
+            await traverseImports(resolved, code);
+          })
+      );
+    };
 
-import {Transformer} from "@parcel/plugin";
-import gql from "graphql";
+    await traverseImports(asset.filePath, await asset.getCode());
 
-export default new Transformer({
-	async transform({asset}) {
-		let code = await asset.getCode();
-		let result = gql(code);
-		asset.setCode(`module.exports = ${JSON.stringify(result)};`);
-		return asset;
-	}
-}
+    asset.type = "js";
+    asset.setCode(
+      `module.exports=${JSON.stringify(
+        gql([...gqlMap.values()].join("\n")),
+        null,
+        2
+      )};`
+    );
+
+    return [asset];
+  },
+});
