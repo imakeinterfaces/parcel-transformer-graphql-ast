@@ -1,5 +1,5 @@
 {
-  "name": "parcel-plugin-graphql-ast",
+  "name": "parcel-transformer-graphql-ast",
   "version": "0.0.1",
   "description": "graphql-tag ast import plugin",
   "main": "src/index.js",
@@ -7,7 +7,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elliottkember/parcel-plugin-graphql-ast.git"
+    "url": "git+https://github.com/elliottkember/parcel-transformer-graphql-ast.git"
   },
   "scripts": {
     "lint": "eslint \"**/*.js\""
