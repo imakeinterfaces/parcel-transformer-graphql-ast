@@ -1,5 +1,5 @@
 {
-  "name": "parcel-plugin-graphql-tag",
+  "name": "parcel-plugin-graphql-ast",
   "version": "0.0.1",
   "description": "graphql-tag ast import plugin",
   "main": "src/index.js",
